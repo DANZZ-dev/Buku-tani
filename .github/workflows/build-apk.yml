@@ -1,1 +1,93 @@
+name: Build APK
 
+on:
+  push:
+    branches: [main, master]
+  workflow_dispatch:
+
+jobs:
+  build:
+    runs-on: ubuntu-latest
+    steps:
+      - uses: actions/checkout@v4
+
+      - uses: actions/setup-node@v4
+        with:
+          node-version: 20
+
+      - uses: actions/setup-java@v4
+        with:
+          distribution: temurin
+          java-version: 17
+
+      - name: Install dependencies
+        run: npm install
+
+      - name: Add Android platform
+        run: npx cap add android
+
+      - name: Generate icon and splash
+        run: |
+          pip install pillow
+          python3 - <<'PY'
+          import math, os
+          from PIL import Image, ImageDraw
+          os.makedirs('assets', exist_ok=True)
+          GREEN=(36,70,47,255); WHEAT=(229,181,58,255); LEAF=(143,196,98,255); SOIL=(74,52,38,255)
+          def lens(d, cx, cy, ang, ln, wd, col):
+              pts=[]
+              for side in (1,-1):
+                  rng=range(0,41) if side==1 else range(40,-1,-1)
+                  for i in rng:
+                      t=i/40; x=t*ln; y=side*wd*math.sin(math.pi*t)
+                      pts.append((cx+x*math.cos(ang)-y*math.sin(ang), cy+x*math.sin(ang)+y*math.cos(ang)))
+              d.polygon(pts, fill=col)
+          def sprout(size, bg=None, scale=1.0):
+              S=size*2
+              im=Image.new('RGBA',(S,S),bg or (0,0,0,0)); d=ImageDraw.Draw(im)
+              u=S/1024*scale; ox=S/2-512*u; oy=S/2-512*u
+              P=lambda x,y:(ox+x*u,oy+y*u)
+              d.ellipse([*P(290,700),*P(734,840)],fill=SOIL)
+              d.line([P(512,760),P(512,470)],fill=WHEAT,width=int(34*u))
+              for a,sx in ((-2.55,1),(-0.6,1)):
+                  cx,cy=P(512,500)
+                  lens(d,cx,cy,a if a<0 else a,300*u,92*u,LEAF)
+              # wheat head
+              cx,cy=P(512,420)
+              lens(d,cx,cy,-math.pi/2,210*u,52*u,WHEAT)
+              return im.resize((size,size),Image.LANCZOS)
+          sprout(1024,GREEN).save('assets/icon-only.png')
+          sprout(1024,None,0.72).save('assets/icon-foreground.png')
+          Image.new('RGBA',(1024,1024),GREEN).save('assets/icon-background.png')
+          sp=Image.new('RGBA',(2732,2732),GREEN); sp.alpha_composite(sprout(900),(916,916)); sp.save('assets/splash.png'); sp.save('assets/splash-dark.png')
+          PY
+          npx @capacitor/assets generate --android --iconBackgroundColor '#24462f' --splashBackgroundColor '#24462f'
+
+      - name: Patch manifest (permissions, portrait)
+        run: |
+          python3 - <<'PY'
+          p='android/app/src/main/AndroidManifest.xml'
+          m=open(p,encoding='utf8').read()
+          perms=['POST_NOTIFICATIONS','VIBRATE','RECEIVE_BOOT_COMPLETED','SCHEDULE_EXACT_ALARM','USE_EXACT_ALARM','WAKE_LOCK']
+          add=''.join('    <uses-permission android:name="android.permission.%s"/>\n'%x for x in perms if 'android.permission.'+x not in m)
+          m=m.replace('<application',add+'    <application',1)
+          if 'screenOrientation' not in m:
+              m=m.replace('<activity','<activity android:screenOrientation="portrait"',1)
+          open(p,'w',encoding='utf8').write(m)
+          print(m)
+          PY
+
+      - name: Sync web assets
+        run: npx cap sync android
+
+      - name: Build APK
+        working-directory: android
+        run: |
+          chmod +x gradlew
+          ./gradlew assembleDebug --no-daemon
+
+      - name: Upload APK
+        uses: actions/upload-artifact@v4
+        with:
+          name: BukuTaniRP-apk
+          path: android/app/build/outputs/apk/debug/app-debug.apk
