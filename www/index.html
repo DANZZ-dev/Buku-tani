@@ -268,9 +268,7 @@ function drawForm(type){
     <label>Ambil benih lagi dalam</label>
     <div class="row"><input id="f_g" inputmode="numeric" value="${esc(v.f_g??'')}" placeholder="0"><select id="f_gu"><option value="60">menit</option><option value="3600">jam</option><option value="86400">hari</option></select></div></div>`}
   <div class="panel"><h3 style="margin-top:12px">Pratinjau laporan</h3><pre id="prev"></pre>
-  <button class="btn" data-act="save">Simpan laporan</button>
-  <button class="btn alt" data-act="savesend">Simpan &amp; kirim ke Discord</button>
-  <button class="btn ghost" data-act="savecopy">Simpan &amp; salin teks</button></div>`;
+  <button class="btn alt" data-act="savesend">Kirim ke Discord</button></div>`;
   if(v.f_gu)$('#f_gu').value=v.f_gu;
   renderStrip(type);prevNow();
 }
@@ -339,7 +337,7 @@ function drawHist(anim){
     <div class="meta">${fmtD(l.at)} ${fmtT(l.at)} · ${esc(l.nama)}</div>
     <div>${esc(l.item)} × ${esc(l.jumlah)}${l.lahan?` · ${esc(l.lahan)}`:''}</div>
     ${l.np?`<div class="thumbs" data-th="${l.id}">${'<div class="ph ld"></div>'.repeat(l.np)}</div>`:''}
-    <div class="acts"><button class="btn sm" data-act="send" data-id="${l.id}">Kirim${l.np?' + foto':''}</button><button class="btn sm ghost" data-act="copy" data-id="${l.id}">Salin</button><button class="btn sm ghost" data-act="mark" data-id="${l.id}">${l.sent?'Tandai belum':'Tandai terkirim'}</button><button class="btn sm red" data-act="del" data-id="${l.id}">Hapus</button></div></div>`).join(''):
+    ${l.sent?'':`<div class="acts"><button class="btn sm" data-act="send" data-id="${l.id}">Kirim ulang${l.np?' + foto':''}</button><button class="btn sm ghost" data-act="copy" data-id="${l.id}">Salin</button><button class="btn sm red" data-act="del" data-id="${l.id}">Hapus</button></div>`}</div>`).join(''):
     `<div class="empty">Belum ada laporan di sini.<br>Buat dari tab Benih atau Panen.</div>`}</div>
   ${all.length>list.length?`<button class="btn ghost" data-act="more">Muat lebih banyak (${all.length-list.length})</button>`:''}`;
   loadThumbs(drawTok);
@@ -416,14 +414,11 @@ const ACT={
   cam(){$('#p_cam').click()},
   gal(){$('#p_gal').click()},
   rmp(b){const d=draft[S.tab],p=d.photos.splice(+b.dataset.i,1)[0];if(p)URL.revokeObjectURL(p.url);renderStrip(S.tab)},
-  save(b){return busy(b,async()=>{if(await commit(S.tab)){toast('Laporan tersimpan');S.tab='riwayat';S.hist='semua';S.histN=20;draw(true)}})},
-  savecopy(b){return busy(b,async()=>{const d=await commit(S.tab);if(!d)return;await copyText(msgOf(d));toast('Tersimpan & disalin');S.tab='riwayat';S.hist='semua';S.histN=20;draw(true)})},
   savesend(b){return busy(b,async()=>{const d=await commit(S.tab);if(!d)return;await sendDiscord(d);S.tab='riwayat';S.hist='semua';S.histN=20;draw(true)})},
   hist(b){S.hist=b.dataset.h;S.histN=20;drawTok++;revokeTh();drawNav();drawHist();app.classList.add('anim');clearTimeout(draw.h);draw.h=setTimeout(()=>app.classList.remove('anim'),750)},
   more(){S.histN+=20;const y=window.scrollY;drawTok++;revokeTh();drawHist();window.scrollTo(0,y)},
   send(b){return busy(b,async()=>{const l=findLog(b);if(!l)return;await sendDiscord(l);const y=window.scrollY;draw();window.scrollTo(0,y)})},
   async copy(b){const l=findLog(b);if(l){await copyText(msgOf(l));toast('Teks disalin')}},
-  mark(b){const l=findLog(b);if(!l)return;l.sent=!l.sent;save();const y=window.scrollY;draw();window.scrollTo(0,y)},
   del(b){const l=findLog(b);if(!l||!confirm('Hapus laporan ini?'))return;
     leave(b,()=>{S.logs=S.logs.filter(x=>x.id!==l.id);S.rem.filter(r=>r.logId===l.id).forEach(unschedule);S.rem=S.rem.filter(r=>r.logId!==l.id);DB.del(l.id);save();const y=window.scrollY;draw();window.scrollTo(0,y)})},
   view(b){openViewer(b.dataset.id,+b.dataset.i)},
