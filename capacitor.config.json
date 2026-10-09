@@ -1,0 +1,11 @@
+{
+  "appId": "com.bukutani.rp",
+  "appName": "Buku Tani RP",
+  "webDir": "www",
+  "server": { "androidScheme": "https" },
+  "android": { "backgroundColor": "#24462f" },
+  "plugins": {
+    "CapacitorHttp": { "enabled": true },
+    "LocalNotifications": { "iconColor": "#24462f" }
+  }
+}
