@@ -1,0 +1,845 @@
+<!DOCTYPE html>
+<html lang="id">
+<head>
+<meta charset="utf-8">
+<meta name="viewport" content="width=device-width,initial-scale=1,maximum-scale=1,viewport-fit=cover">
+<meta name="theme-color" content="#24462f">
+<link rel="manifest" href="/manifest.webmanifest">
+<link rel="icon" type="image/png" href="/icon-192.png">
+<link rel="apple-touch-icon" href="/icon-192.png">
+<meta name="mobile-web-app-capable" content="yes">
+<meta name="apple-mobile-web-app-capable" content="yes">
+<meta name="apple-mobile-web-app-title" content="Buku Tani">
+<title>Buku Tani RP</title>
+<style>
+:root{--moss:#24462f;--moss2:#35653f;--moss3:#4c8a58;--wheat:#e5b53a;--soil:#4a3426;--paper:#f1f4ea;--card:#fff;--line:#d5dcc6;--red:#b4432f;--ink:#1c2a20;--ease:cubic-bezier(.22,.8,.3,1);--r:14px;--sh:0 1px 2px rgba(36,70,47,.08),0 4px 14px rgba(36,70,47,.07)}
+*{box-sizing:border-box;-webkit-tap-highlight-color:transparent}
+html{-webkit-text-size-adjust:100%}
+body{margin:0;background:var(--paper);color:var(--ink);font:16px/1.45 system-ui,-apple-system,"Segoe UI",Roboto,sans-serif;padding-bottom:calc(96px + env(safe-area-inset-bottom));-webkit-font-smoothing:antialiased;-webkit-user-select:none;user-select:none;overscroll-behavior:none}
+h1,h2,h3{font-family:"Rockwell","Roboto Slab",Georgia,serif;margin:0}
+header{background:linear-gradient(135deg,var(--moss),var(--moss2));color:#fff;padding:calc(14px + env(safe-area-inset-top)) 16px 16px;display:flex;justify-content:space-between;align-items:center;position:sticky;top:0;z-index:5;border-radius:0 0 22px 22px}
+header::after{content:"";position:absolute;left:0;right:0;bottom:0;height:4px;background:var(--wheat);border-radius:0 0 22px 22px;opacity:.9}
+header::before{content:"";position:absolute;left:0;right:0;top:100%;height:14px;background:linear-gradient(rgba(36,70,47,.22),transparent);opacity:0;transition:opacity .25s;pointer-events:none}
+header.sc::before{opacity:1}
+.brand{display:flex;align-items:center;gap:10px}
+.logo{width:40px;height:40px;border-radius:12px;background:rgba(255,255,255,.14);display:grid;place-items:center;font-size:22px;animation:sway 4s ease-in-out infinite;transform-origin:50% 90%}
+header h1{font-size:20px;line-height:1.15}
+header small{opacity:.8;display:block;font-size:12px;font-family:system-ui}
+#hdrInfo{font-size:11px;line-height:1.3;background:rgba(255,255,255,.12);padding:5px 10px;border-radius:12px}
+main{padding:16px 14px;max-width:560px;margin:0 auto}
+#app>h2{font-size:22px;color:var(--moss);margin:2px 0 12px}
+#app>h2::after{content:"";display:block;width:34px;height:4px;border-radius:4px;background:var(--wheat);margin-top:6px}
+h3.sec{color:var(--moss)}
+.panel{background:#fff;border:1px solid var(--line);border-radius:var(--r);padding:2px 14px 14px;margin-bottom:12px;box-shadow:var(--sh)}
+nav{position:fixed;left:12px;right:12px;bottom:calc(10px + env(safe-area-inset-bottom));background:var(--soil);display:flex;z-index:6;border-radius:22px;box-shadow:0 8px 24px rgba(40,26,16,.35);max-width:536px;margin:0 auto}
+nav button{flex:1;background:none;border:0;color:#d9c9b8;padding:9px 1px 8px;font-size:10px;letter-spacing:-.2px;white-space:nowrap;position:relative;transition:color .2s;z-index:1}
+nav button b{display:block;font-size:20px;line-height:1.15;transition:transform .3s var(--ease)}
+nav button.on{color:#fff;font-weight:600}
+nav button.on b{transform:translateY(-2px) scale(1.15)}
+nav button:active b{transform:scale(.88)}
+#navInd{position:absolute;top:0;left:0;width:20%;height:100%;transform:translateX(0);transition:transform .38s var(--ease);will-change:transform;pointer-events:none}
+#navInd::before{content:"";position:absolute;inset:5px 6px;border-radius:17px;background:rgba(229,181,58,.22);box-shadow:inset 0 0 0 1px rgba(229,181,58,.35)}
+nav .dot{position:absolute;top:4px;right:20%;background:var(--red);color:#fff;border-radius:9px;font-size:10px;min-width:17px;padding:1px 4px;animation:pop .3s var(--ease)}
+label{display:block;font-size:13px;font-weight:600;margin:12px 0 4px;color:var(--moss)}
+input,select,textarea{width:100%;padding:12px;border:1.5px solid var(--line);border-radius:10px;font:inherit;background:#fbfcf8;color:var(--ink);-webkit-user-select:text;user-select:text;transition:border-color .2s,box-shadow .2s,background .2s}
+input:focus,select:focus,textarea:focus{outline:0;border-color:var(--moss2);background:#fff;box-shadow:0 0 0 3px rgba(229,181,58,.55)}
+button:focus-visible{outline:3px solid var(--wheat);outline-offset:1px}
+textarea{min-height:76px;resize:vertical}
+pre{-webkit-user-select:text;user-select:text}
+.row{display:flex;gap:10px}.row>*{flex:1}
+button{touch-action:manipulation;font-family:inherit}
+.btn{border:0;border-radius:12px;padding:13px 16px;font:inherit;font-weight:700;background:linear-gradient(180deg,var(--moss2),var(--moss));color:#fff;width:100%;margin-top:12px;position:relative;overflow:hidden;box-shadow:0 2px 6px rgba(36,70,47,.25);transition:transform .15s var(--ease),opacity .2s,filter .2s,box-shadow .2s}
+.btn::before{content:"";position:absolute;inset:0;background:radial-gradient(circle at var(--rx,50%) var(--ry,50%),rgba(255,255,255,.4),transparent 65%);opacity:0;pointer-events:none}
+.btn:active::before{opacity:1}
+.btn:not(:active)::before{transition:opacity .4s}
+.btn:active{transform:scale(.97);box-shadow:0 1px 2px rgba(36,70,47,.25)}
+.btn:disabled{opacity:.7;pointer-events:none}
+.btn.alt{background:linear-gradient(180deg,#efc455,var(--wheat));color:var(--soil);box-shadow:0 2px 6px rgba(150,110,10,.25)}
+.btn.ghost{background:transparent;color:var(--moss);border:1.5px solid var(--moss);box-shadow:none}
+.btn.sm{width:auto;margin:0;padding:8px 12px;font-size:14px;border-radius:10px}
+.btn.red{background:linear-gradient(180deg,#c85a45,var(--red));box-shadow:0 2px 6px rgba(180,67,47,.25)}
+.btn.load{color:transparent!important}
+.btn.load::after{content:"";position:absolute;left:50%;top:50%;width:18px;height:18px;margin:-9px 0 0 -9px;border:3px solid rgba(255,255,255,.4);border-top-color:#fff;border-radius:50%;animation:spin .7s linear infinite}
+.btn.alt.load::after,.btn.ghost.load::after{border-color:rgba(74,52,38,.25);border-top-color:var(--soil)}
+.card{background:var(--card);border:1px solid var(--line);border-left:5px solid var(--moss2);border-radius:var(--r);padding:12px 12px 12px 14px;margin-bottom:12px;box-shadow:var(--sh);transition:opacity .18s,transform .18s var(--ease)}
+.card.out{opacity:0;transform:translateX(28px)}
+.card.panen{border-left-color:var(--wheat)}
+.card.due{border-left-color:var(--red);background:#fff4ef}
+.card h3{font-size:16px}
+.meta{font-size:12px;color:#5d6b5c}
+.tag{display:inline-block;font-size:11px;padding:2px 9px;border-radius:10px;background:#e3ecd6;color:var(--moss);font-weight:700;white-space:nowrap;align-self:flex-start}
+.tag.warn{background:#fbe3d9;color:var(--red)}
+.tag.ok{background:#d8efd9}
+pre{white-space:pre-wrap;background:#f6f8f0;border:1px dashed var(--line);border-radius:10px;padding:10px;font:13px/1.4 ui-monospace,Consolas,monospace;margin:8px 0}
+.acts{display:flex;gap:8px;flex-wrap:wrap;margin-top:10px}
+.empty{text-align:center;color:#6b7a69;padding:34px 10px}
+.empty::before{content:"🌱";display:block;font-size:44px;margin-bottom:6px;animation:float 3s ease-in-out infinite}
+.seg{display:flex;gap:6px;margin-bottom:12px;background:#e3ecd6;padding:4px;border-radius:14px}
+.seg button{flex:1;padding:9px 4px;border:0;background:transparent;border-radius:11px;font-size:14px;color:var(--moss);transition:background .25s,color .25s,transform .15s,box-shadow .25s}
+.seg button:active{transform:scale(.95)}
+.seg button.on{background:var(--moss);color:#fff;box-shadow:0 2px 6px rgba(36,70,47,.3)}
+.hint{font-size:12px;color:#5d6b5c;margin-top:4px}
+.sec{margin-top:22px;margin-bottom:10px}
+.pbar{display:flex;gap:8px}.pbar .btn{margin-top:6px}
+.pstrip,.thumbs{display:flex;flex-wrap:wrap;gap:8px;margin-top:10px}
+.ph{position:relative;width:72px;height:72px;border-radius:12px;overflow:hidden;background:#e3ecd6;border:0;padding:0;animation:pop .28s var(--ease);transition:transform .15s}
+button.ph:active{transform:scale(.94)}
+.thumbs .ph{width:56px;height:56px}
+.ph img{width:100%;height:100%;object-fit:cover;display:block}
+.ph.ld{animation:pulse 1s ease-in-out infinite}
+.ph .x{position:absolute;top:3px;right:3px;width:22px;height:22px;border-radius:50%;border:0;background:rgba(0,0,0,.6);color:#fff;font-size:12px;line-height:22px;padding:0}
+#viewer{position:fixed;inset:0;background:rgba(0,0,0,.92);z-index:40;display:flex;align-items:center;justify-content:center;opacity:0;visibility:hidden;transition:opacity .22s,visibility .22s}
+#viewer.show{opacity:1;visibility:visible}
+#viewer img{max-width:100%;max-height:100%;object-fit:contain;transform:scale(.94);transition:transform .3s var(--ease)}
+#viewer.show img{transform:none}
+#toast{position:fixed;left:50%;bottom:calc(98px + env(safe-area-inset-bottom));transform:translate(-50%,14px) scale(.96);background:var(--ink);color:#fff;padding:11px 18px;border-radius:20px;font-size:14px;opacity:0;pointer-events:none;transition:opacity .22s,transform .3s var(--ease);z-index:50;max-width:90%;text-align:center;will-change:transform,opacity;box-shadow:0 6px 18px rgba(0,0,0,.28)}
+#toast.show{opacity:1;transform:translate(-50%,0) scale(1)}
+#alarm{position:fixed;inset:0;background:rgba(36,70,47,.96);color:#fff;z-index:30;display:flex;flex-direction:column;align-items:center;justify-content:center;padding:24px;text-align:center;opacity:0;visibility:hidden;transition:opacity .25s,visibility .25s}
+#alarm.show{opacity:1;visibility:visible}
+#alarm>*{transform:translateY(16px);transition:transform .35s var(--ease)}
+#alarm.show>*{transform:none}
+#alarm .bell{position:relative;font-size:56px;margin-bottom:12px;animation:ring 1.2s ease-in-out infinite;animation-play-state:paused}
+#alarm .bell::before{content:"";position:absolute;left:50%;top:50%;width:110px;height:110px;margin:-55px 0 0 -55px;border-radius:50%;border:2px solid var(--wheat);opacity:0;animation:wave 1.6s ease-out infinite;animation-play-state:paused}
+#alarm.show .bell,#alarm.show .bell::before{animation-play-state:running}
+#alarm h2{font-size:26px;margin-bottom:8px}
+#alarm .btn{max-width:320px}
+#app.anim>*{animation:rise .38s var(--ease) both}
+#app.anim>:nth-child(2){animation-delay:.04s}#app.anim>:nth-child(3){animation-delay:.08s}#app.anim>:nth-child(4){animation-delay:.12s}
+#app.anim>:nth-child(5){animation-delay:.16s}#app.anim>:nth-child(6){animation-delay:.2s}#app.anim>:nth-child(7){animation-delay:.24s}#app.anim>:nth-child(n+8){animation-delay:.28s}
+@keyframes rise{from{opacity:0;transform:translateY(16px)}to{opacity:1;transform:none}}
+@keyframes pop{from{opacity:0;transform:scale(.7)}to{opacity:1;transform:none}}
+@keyframes spin{to{transform:rotate(360deg)}}
+@keyframes pulse{50%{opacity:.45}}
+@keyframes float{50%{transform:translateY(-6px)}}
+@keyframes sway{0%,100%{transform:rotate(-5deg)}50%{transform:rotate(5deg)}}
+@keyframes wave{0%{transform:scale(.6);opacity:.7}100%{transform:scale(1.6);opacity:0}}
+@keyframes ring{0%,100%{transform:rotate(0)}10%,30%,50%{transform:rotate(14deg)}20%,40%{transform:rotate(-14deg)}60%{transform:rotate(0)}}
+@media (prefers-reduced-motion:reduce){*,*::before,*::after{animation-duration:.01ms!important;animation-delay:0s!important;transition-duration:.01ms!important}}
+
+#auth{position:fixed;inset:0;z-index:45;background:var(--paper);overflow:auto;display:none;padding:calc(28px + env(safe-area-inset-top)) 16px 28px;animation:rise .35s var(--ease) both}
+#auth.show{display:block}
+.authbox{max-width:420px;margin:0 auto;text-align:center}
+.alogo{width:72px;height:72px;margin:0 auto 10px;border-radius:22px;background:linear-gradient(135deg,var(--moss),var(--moss2));display:grid;place-items:center;font-size:38px;animation:sway 4s ease-in-out infinite;transform-origin:50% 90%;box-shadow:var(--sh)}
+.authbox h1{color:var(--moss);font-size:26px}
+.authbox .panel{text-align:left;margin-top:4px}
+#a_msg{min-height:18px;margin-top:10px;font-size:13px;color:var(--red);text-align:center}
+#a_msg.good{color:var(--moss2)}
+.tag.adm{background:#f6e3a8;color:var(--soil)}
+.admn{font-size:12px;color:#5d6b5c;margin:2px 0 0}
+.thr{display:grid;grid-template-columns:1fr 1fr;gap:8px}.thr label{font-size:12.5px}
+.tag.warn{background:#fbe3d6;color:#8a3b17}
+.tag.wait{background:#f6e3a8;color:#6b4a0a}.pk{margin-top:8px;padding:9px 11px;border-radius:12px;background:#e8f1e2;color:#24462f;font-size:13.5px;font-weight:600}
+.chips{display:flex;flex-wrap:wrap;gap:8px;margin:8px 0}.chip{display:inline-flex;align-items:center;gap:8px;background:#e8f1e2;border-radius:999px;padding:6px 6px 6px 12px;font-size:13.5px;font-weight:600;color:#24462f}.chip small{display:block;font-weight:400;opacity:.65;font-size:11px}.chip button{border:0;background:#c9d8bf;color:#24462f;border-radius:50%;width:26px;height:26px;font-size:12px;flex:none}.addrow{display:flex;gap:8px;align-items:stretch}.addrow input{flex:1;min-width:0}
+</style>
+</head>
+<body>
+<header><div class="brand"><span class="logo">🌾</span><div><h1>Buku Tani RP</h1><small id="clock"></small></div></div><div id="hdrInfo" class="meta" style="color:#fff;text-align:right"></div></header>
+<main id="app"></main>
+<nav id="nav"></nav>
+<div id="toast"></div>
+<div id="viewer" data-act="vclose"><img id="vImg" alt="Foto laporan"></div>
+<div id="auth"></div>
+<div id="alarm"><div class="bell">🔔</div><h2 id="alT"></h2><p id="alB"></p><button class="btn alt" id="alOk">Matikan</button><button class="btn ghost" id="alSn" style="color:#fff;border-color:#fff">Tunda 5 menit</button></div>
+
+<script>
+/* ---------- penyimpanan teks (localStorage, cadangan memori) ---------- */
+const mem={};
+const store={
+  get(k,d){try{const v=localStorage.getItem(k);return v?JSON.parse(v):d}catch(e){return k in mem?mem[k]:d}},
+  set(k,v){try{localStorage.setItem(k,JSON.stringify(v))}catch(e){mem[k]=v}}
+};
+/* ---------- penyimpanan foto (IndexedDB, supaya tidak penuhi localStorage) ---------- */
+const DB={
+  _p:null,_m:new Map(),
+  open(){return this._p||(this._p=new Promise(res=>{try{const q=indexedDB.open('bukutani',1);q.onupgradeneeded=()=>q.result.createObjectStore('photos');q.onsuccess=()=>res(q.result);q.onerror=q.onblocked=()=>res(null)}catch(e){res(null)}}))},
+  async run(mode,fn,fallback){
+    const db=await this.open();if(!db)return fallback;
+    return new Promise(r=>{try{const tx=db.transaction('photos',mode);const q=fn(tx.objectStore('photos'));tx.oncomplete=()=>r(q&&'result' in q?q.result:true);tx.onerror=tx.onabort=()=>r(fallback)}catch(e){r(fallback)}});
+  },
+  async put(id,v){if(!(await this.open())){this._m.set(id,v);return}await this.run('readwrite',s=>s.put(v,id),null)},
+  async get(id){if(this._m.has(id))return this._m.get(id);return (await this.run('readonly',s=>s.get(id),null))||null},
+  async del(id){this._m.delete(id);await this.run('readwrite',s=>s.delete(id),null)},
+  async clear(){this._m.clear();await this.run('readwrite',s=>s.clear(),null)}
+};
+
+const DEF_TPL={
+  benih:"# 🌱 ֹ  SEED HARVEST REPORT  ────────────\n\n**Request pengambilan seed**\n> 👤 Petani: {nama}\n> 📅 Tanggal/Waktu: {tanggal} {jam}\n> 📍 Lokasi Ladang: {lahan}\n> 📦 Jumlah Seed: {jumlah}\n> 📸 Bukti SS:\n\nNote : {catatan}\n\nTag : <@901003714154889258>\n\n───  Terima kasih telah melapor 🌱",
+  panen:"**LAPORAN SETORAN HASIL PANEN**\nNama: {nama}\nHasil: {item}\nJumlah: {jumlah}\nLahan: {lahan}\nWaktu: {tanggal} {jam}\nCatatan: {catatan}"
+};
+let A=store.get('auth',null);
+let S={
+  logs:store.get('logs',[]),
+  rem:store.get('rem',[]),
+  tpl:store.get('tpl',DEF_TPL),
+  cfg:store.get('cfg',{nama:'',sound:true}),
+  tab:'benih',hist:'semua',histN:20
+};
+/* migrasi: format benih bawaan lama diganti format Seed Harvest Report */
+if(S.tpl&&S.tpl.benih==="**LAPORAN PENGAMBILAN BENIH**\nNama: {nama}\nBenih: {item}\nJumlah: {jumlah}\nLahan: {lahan}\nWaktu: {tanggal} {jam}\nCatatan: {catatan}"){S.tpl.benih=DEF_TPL.benih;store.set('tpl',S.tpl)}
+/* webhook & tag sekarang hanya ada di server: hapus sisa data lama di perangkat */
+if(S.cfg&&('webhook' in S.cfg||'ping' in S.cfg)){delete S.cfg.webhook;delete S.cfg.ping;store.set('cfg',S.cfg)}
+const MAXP=4;
+const draft={benih:{photos:[],v:{},loading:0},panen:{photos:[],v:{},loading:0}};
+const save=()=>{store.set('logs',S.logs);store.set('rem',S.rem);store.set('tpl',S.tpl);store.set('cfg',S.cfg)};
+const $=s=>document.querySelector(s);
+const app=$('#app');
+const esc=s=>String(s??'').replace(/[&<>"]/g,c=>({'&':'&amp;','<':'&lt;','>':'&gt;','"':'&quot;'}[c]));
+const uid=()=>Date.now().toString(36)+Math.random().toString(36).slice(2,6);
+const pad=n=>String(n).padStart(2,'0');
+const fmtD=t=>{const d=new Date(t);return `${pad(d.getDate())}/${pad(d.getMonth()+1)}/${d.getFullYear()}`};
+const fmtT=t=>{const d=new Date(t);return `${pad(d.getHours())}:${pad(d.getMinutes())}`};
+const toLocalInput=t=>{const d=new Date(t);return `${d.getFullYear()}-${pad(d.getMonth()+1)}-${pad(d.getDate())}T${pad(d.getHours())}:${pad(d.getMinutes())}`};
+function toast(m){const t=$('#toast');t.textContent=m;t.classList.add('show');clearTimeout(toast.h);toast.h=setTimeout(()=>t.classList.remove('show'),2400)}
+const nextFrame=()=>new Promise(r=>requestAnimationFrame(()=>r()));
+async function busy(b,fn){if(!b||b.disabled)return;b.disabled=true;b.classList.add('load');try{return await fn()}finally{b.disabled=false;b.classList.remove('load')}}
+
+/* ---------- format laporan ---------- */
+function render(tpl,d){
+  const map={nama:d.nama||'-',item:d.item||'-',jumlah:d.jumlah||'-',lahan:d.lahan||'-',tanggal:fmtD(d.at),jam:fmtT(d.at),catatan:d.catatan||'-'};
+  return tpl.replace(/\{(\w+)\}/g,(m,k)=>k in map?map[k]:m);
+}
+const msgOf=l=>render(S.tpl[l.type],l);
+
+/* ---------- foto: kompres supaya cepat & ringan ---------- */
+async function shrink(src,max,q){
+  let bmp,tmp;
+  try{bmp=await createImageBitmap(src,{imageOrientation:'from-image'})}
+  catch(e){bmp=await new Promise((ok,no)=>{const i=new Image();i.onload=()=>ok(i);i.onerror=no;i.src=tmp=URL.createObjectURL(src)})}
+  const w=bmp.width||bmp.naturalWidth,h=bmp.height||bmp.naturalHeight,k=Math.min(1,max/Math.max(w,h));
+  const c=document.createElement('canvas');c.width=Math.max(1,Math.round(w*k));c.height=Math.max(1,Math.round(h*k));
+  const x=c.getContext('2d');x.fillStyle='#fff';x.fillRect(0,0,c.width,c.height);x.drawImage(bmp,0,0,c.width,c.height);
+  if(bmp.close)bmp.close();if(tmp)URL.revokeObjectURL(tmp);
+  const blob=await new Promise(r=>c.toBlob(r,'image/jpeg',q));
+  c.width=c.height=0;return blob;
+}
+function renderStrip(type){
+  if(S.tab!==type)return;
+  const el=$('#pStrip');if(!el)return;
+  const d=draft[type];
+  el.innerHTML=d.photos.map((p,i)=>`<div class="ph"><img src="${p.url}" alt="Foto ${i+1}"><button class="x" data-act="rmp" data-i="${i}" aria-label="Hapus foto">✕</button></div>`).join('')+'<div class="ph ld"></div>'.repeat(d.loading);
+  const c=$('#pCount');if(c)c.textContent=`${d.photos.length}/${MAXP} foto`;
+}
+async function addPhotos(input){
+  const type=S.tab,d=draft[type];
+  const room=MAXP-d.photos.length-d.loading;
+  const files=[...input.files].filter(f=>f.type.startsWith('image/')||!f.type).slice(0,Math.max(0,room));
+  if(input.files.length>files.length)toast(`Maksimal ${MAXP} foto per laporan`);
+  input.value='';
+  d.loading+=files.length;renderStrip(type);
+  for(const f of files){
+    await nextFrame();
+    try{
+      const full=await shrink(f,1600,.82);
+      const thumb=await shrink(full,240,.7);
+      d.photos.push({full,thumb,url:URL.createObjectURL(thumb)});
+    }catch(e){toast('Foto tidak dapat dibaca')}
+    d.loading--;renderStrip(type);
+  }
+}
+function clearDraft(type){draft[type].photos.forEach(p=>URL.revokeObjectURL(p.url));draft[type]={photos:[],v:{},loading:0}}
+
+/* ---------- navigasi ---------- */
+const TABS=[['benih','🌱','Benih'],['panen','🌾','Panen'],['riwayat','📒','Riwayat'],['ingat','⏰','Alarm'],['atur','⚙️','Pengaturan']];
+const tabs=()=>A&&A.role==='admin'?[...TABS,['admin','👑','Admin']]:TABS;
+let navBuilt=false,lastDue=-1,lastHdr='',admPending=0;
+function drawNav(){
+  const T=tabs();
+  if(!navBuilt){
+    $('#nav').innerHTML='<i id="navInd"></i>'+T.map(([k,i,n])=>`<button data-act="tab" data-t="${k}"><b>${i}</b>${n}</button>`).join('');
+    $('#navInd').style.width=(100/T.length)+'%';
+    navBuilt=true;lastDue=-1;
+  }
+  const idx=Math.max(0,T.findIndex(t=>t[0]===S.tab));
+  $('#navInd').style.transform=`translateX(${idx*100}%)`;
+  $('#nav').querySelectorAll('button').forEach(b=>b.classList.toggle('on',b.dataset.t===S.tab));
+  const dots={ingat:S.rem.filter(r=>!r.done&&r.at<=Date.now()).length,admin:A&&A.role==='admin'?admPending:0},dk=JSON.stringify(dots);
+  if(dk!==lastDue){
+    lastDue=dk;$('#nav').querySelectorAll('.dot').forEach(e=>e.remove());
+    for(const k in dots)if(dots[k]){const b=$(`#nav [data-t="${k}"]`);if(b)b.insertAdjacentHTML('beforeend',`<span class="dot">${dots[k]}</span>`)}
+  }
+  const unsent=S.logs.filter(l=>!l.sent).length;
+  const waiting=S.logs.filter(l=>l.sent&&l.rid&&l.st!=='success').length;
+  const hh=unsent?`${unsent} laporan<br>belum terkirim`:waiting?`${waiting} laporan<br>menunggu persetujuan`:'Semua laporan<br>terkirim';
+  if(hh!==lastHdr){lastHdr=hh;$('#hdrInfo').innerHTML=hh}
+}
+let drawTok=0,thUrls=[];
+function revokeTh(){thUrls.forEach(u=>URL.revokeObjectURL(u));thUrls=[]}
+function draw(anim){
+  drawTok++;revokeTh();drawNav();
+  app.classList.remove('anim');
+  ({benih:()=>drawForm('benih'),panen:()=>drawForm('panen'),riwayat:drawHist,ingat:drawRem,atur:drawSet,admin:openAdmin})[S.tab]();
+  if(anim){void app.offsetWidth;app.classList.add('anim');clearTimeout(draw.h);draw.h=setTimeout(()=>app.classList.remove('anim'),750)}
+}
+
+/* ---------- form benih / panen ---------- */
+function drawForm(type){
+  const b=type==='benih';
+  const last=S.logs.find(l=>l.type===type)||{};
+  const v=draft[type].v;
+  $('#app').innerHTML=`
+  <h2>${b?'Pengambilan benih':'Setoran hasil panen'}</h2>
+  <div class="panel"><label>Nama karakter</label><input id="f_nama" value="${esc(v.f_nama??S.cfg.nama)}" placeholder="Nama karakter Anda"></div>
+  <div class="panel"><label>${b?'Jenis benih':'Jenis hasil panen'}</label><input id="f_item" value="${esc(v.f_item??last.item??'')}" placeholder="${b?'Contoh: Benih padi':'Contoh: Padi'}">
+  <div class="row"><div><label>Jumlah</label><input id="f_jumlah" inputmode="numeric" value="${esc(v.f_jumlah??'')}" placeholder="0"></div>
+  <div><label>Lahan</label><input id="f_lahan" value="${esc(v.f_lahan??last.lahan??'')}" placeholder="Contoh: Lahan 2"></div></div></div>
+  <div class="panel"><label>Waktu</label><input id="f_at" type="datetime-local" value="${toLocalInput(Date.now())}">
+  <label>Catatan</label><textarea id="f_cat" placeholder="Opsional">${esc(v.f_cat??'')}</textarea></div>
+  <div class="card" style="margin-top:16px"><h3>📷 Foto bukti (opsional)</h3>
+    <div class="hint" id="pCount"></div>
+    <div class="pbar"><button class="btn sm ghost" style="flex:1;padding:11px" data-act="cam">Ambil foto</button><button class="btn sm ghost" style="flex:1;padding:11px" data-act="gal">Pilih dari galeri</button></div>
+    <input class="pin" id="p_cam" type="file" accept="image/*" capture="environment" hidden>
+    <input class="pin" id="p_gal" type="file" accept="image/*" multiple hidden>
+    <div class="pstrip" id="pStrip"></div></div>
+  ${b?`<div class="card"><h3>Alarm panen (opsional)</h3>
+    <label>Benih siap dipanen dalam</label>
+    <div class="row"><input id="f_g" inputmode="numeric" value="${esc(v.f_g??'')}" placeholder="0"><select id="f_gu"><option value="60">menit</option><option value="3600">jam</option><option value="86400">hari</option></select></div>
+    <div class="hint">Alarm akan berbunyi saat benih siap dipanen.</div></div>`:
+  `<div class="card"><h3>Alarm pengambilan benih berikutnya (opsional)</h3>
+    <label>Ambil benih kembali dalam</label>
+    <div class="row"><input id="f_g" inputmode="numeric" value="${esc(v.f_g??'')}" placeholder="0"><select id="f_gu"><option value="60">menit</option><option value="3600">jam</option><option value="86400">hari</option></select></div></div>`}
+  <div class="panel"><h3 style="margin-top:12px">Pratinjau laporan</h3><pre id="prev"></pre>
+  <button class="btn alt" data-act="savesend">Kirim</button></div>`;
+  if(v.f_gu)$('#f_gu').value=v.f_gu;
+  renderStrip(type);prevNow();
+}
+const getForm=type=>({id:uid(),type,nama:$('#f_nama').value.trim(),item:$('#f_item').value.trim(),jumlah:$('#f_jumlah').value.trim(),lahan:$('#f_lahan').value.trim(),catatan:$('#f_cat').value.trim(),at:new Date($('#f_at').value||Date.now()).getTime(),sent:false});
+function prevNow(){const p=$('#prev');if(p&&(S.tab==='benih'||S.tab==='panen'))p.textContent=render(S.tpl[S.tab],getForm(S.tab))}
+let pq=0;const prevSoon=()=>{if(!pq)pq=requestAnimationFrame(()=>{pq=0;prevNow()})};
+async function commit(type){
+  const dr=draft[type];
+  if(dr.loading){toast('Foto masih diproses, mohon tunggu sebentar');return null}
+  const d=getForm(type),b=type==='benih';
+  if(!d.nama||!d.item||!d.jumlah){toast('Nama karakter, jenis, dan jumlah wajib diisi');return null}
+  d.np=dr.photos.length;
+  if(d.np)await DB.put(d.id,{full:dr.photos.map(p=>p.full),thumb:dr.photos.map(p=>p.thumb)});
+  S.cfg.nama=d.nama;S.logs.unshift(d);
+  const g=parseFloat($('#f_g').value);
+  if(g>0){
+    const at=Date.now()+g*parseInt($('#f_gu').value)*1000;
+    const nr={id:uid(),title:b?`Waktunya panen: ${d.item}`:`Waktunya mengambil benih`,body:b?`${d.item} (${d.lahan||'lahan'}) sudah siap dipanen.`:`Waktunya mengambil benih untuk ${d.lahan||'lahan'}.`,at,done:false,logId:d.id};
+    S.rem.push(nr);schedule(nr);
+  }
+  save();clearDraft(type);return d;
+}
+
+/* ---------- Discord & salin ---------- */
+async function copyText(t){
+  try{await navigator.clipboard.writeText(t);return true}
+  catch(e){const a=document.createElement('textarea');a.value=t;document.body.appendChild(a);a.select();let ok=false;try{ok=document.execCommand('copy')}catch(_){}a.remove();return ok}
+}
+async function sendDiscord(l){
+  const text=msgOf(l);
+  if(!A){toast('Silakan masuk terlebih dahulu');return false}
+  try{
+    const data={type:l.type,nama:l.nama,item:l.item,jumlah:l.jumlah,lahan:l.lahan,catatan:l.catatan,tanggal:fmtD(l.at),jam:fmtT(l.at)};
+    const ph=l.np?await DB.get(l.id):null;
+    let r;
+    if(ph&&ph.full&&ph.full.length){
+      const fd=new FormData();
+      fd.append('data',JSON.stringify(data));
+      ph.full.forEach((b,i)=>fd.append(`files[${i}]`,b,`foto-${i+1}.jpg`));
+      r=await api('/api/report',{body:fd,web:true,timeout:90000});
+    }else{
+      r=await api('/api/report',{json:data,timeout:60000});
+      if(l.np)toast('Foto tidak ditemukan; hanya teks laporan yang terkirim');
+    }
+    if(r.ok){l.sent=true;if(r.data.id){l.rid=r.data.id;l.st='pending'}save();if(!l.np||ph)toast(r.data.id?'Laporan terkirim. Menunggu persetujuan admin.':(ph?'Laporan dan foto berhasil terkirim':'Laporan berhasil terkirim'));if(r.data.id)setTimeout(memPoll,4000);return true}
+    if(!A)return false;
+    await copyText(text);
+    toast((r.data.error||'Laporan gagal dikirim')+'. Teks laporan telah disalin'+(l.np?', namun foto tidak ikut tersalin.':'.'));
+    return false;
+  }catch(e){
+    await copyText(text);
+    toast(l.np?'Laporan gagal dikirim. Teks telah disalin; foto tidak ikut tersalin. Silakan kirim ulang dari Riwayat.':'Laporan gagal dikirim. Teks telah disalin; silakan kirim ulang dari Riwayat.');return false;
+  }
+}
+
+/* ---------- riwayat ---------- */
+function drawHist(anim){
+  const f={semua:()=>1,benih:l=>l.type==='benih',panen:l=>l.type==='panen',belum:l=>!l.sent,tunggu:l=>l.sent&&l.rid&&l.st!=='success'};
+  const all=S.logs.filter(f[S.hist]),list=all.slice(0,S.histN);
+  $('#app').innerHTML=`<h2>Riwayat laporan</h2>
+  <div class="seg" style="margin-top:10px">${[['semua','Semua'],['benih','Benih'],['panen','Panen'],['tunggu','Pending'],['belum','Belum terkirim']].map(([k,n])=>`<button data-act="hist" data-h="${k}" class="${S.hist===k?'on':''}">${n}</button>`).join('')}</div>
+  <div class="list">${list.length?list.map(l=>`<div class="card ${l.type}" data-card="${l.id}">
+    <div style="display:flex;justify-content:space-between;gap:8px"><h3>${l.type==='benih'?'🌱 Pengambilan benih':'🌾 Setoran hasil panen'}</h3><span class="tag ${!l.sent?'warn':l.rid?(l.st==='success'?'ok':'wait'):'ok'}">${!l.sent?'Belum terkirim':l.rid?(l.st==='success'?'✅ Sukses':'⏳ Pending'):'Terkirim'}</span></div>
+    <div class="meta">${fmtD(l.at)} ${fmtT(l.at)} · ${esc(l.nama)}</div>
+    <div>${esc(l.item)} × ${esc(l.jumlah)}${l.lahan?` · ${esc(l.lahan)}`:''}</div>
+    ${l.pk?`<div class="pk">📍 Info pengambilan: ${esc(l.pk)}</div>`:''}
+    ${l.np?`<div class="thumbs" data-th="${l.id}">${'<div class="ph ld"></div>'.repeat(l.np)}</div>`:''}
+    ${l.sent?'':`<div class="acts"><button class="btn sm" data-act="send" data-id="${l.id}">Kirim ulang${l.np?' + foto':''}</button><button class="btn sm ghost" data-act="copy" data-id="${l.id}">Salin teks</button><button class="btn sm red" data-act="del" data-id="${l.id}">Hapus</button></div>`}</div>`).join(''):
+    `<div class="empty">Belum ada laporan.<br>Buat laporan melalui tab Benih atau Panen.</div>`}</div>
+  ${all.length>list.length?`<button class="btn ghost" data-act="more">Tampilkan lebih banyak (${all.length-list.length})</button>`:''}`;
+  loadThumbs(drawTok);
+}
+async function loadThumbs(tok){
+  for(const el of document.querySelectorAll('[data-th]')){
+    const ph=await DB.get(el.dataset.th);
+    if(tok!==drawTok)return;
+    if(!ph||!ph.thumb){el.innerHTML='<span class="meta">Foto tidak ditemukan</span>';continue}
+    el.innerHTML=ph.thumb.map((b,i)=>{const u=URL.createObjectURL(b);thUrls.push(u);return `<button class="ph" data-act="view" data-id="${el.dataset.th}" data-i="${i}" aria-label="Lihat foto ${i+1}"><img src="${u}" alt="Foto ${i+1}"></button>`}).join('');
+  }
+}
+let vUrl=null;
+async function openViewer(id,i){
+  const ph=await DB.get(id);if(!ph||!ph.full||!ph.full[i]){toast('Foto tidak ditemukan');return}
+  closeViewer(true);vUrl=URL.createObjectURL(ph.full[i]);
+  $('#vImg').src=vUrl;$('#viewer').classList.add('show');
+}
+function closeViewer(now){
+  const v=$('#viewer');v.classList.remove('show');
+  const done=()=>{if(vUrl&&!v.classList.contains('show')){URL.revokeObjectURL(vUrl);vUrl=null;$('#vImg').removeAttribute('src')}};
+  now?done():setTimeout(done,300);
+}
+
+/* ---------- alarm ---------- */
+function drawRem(){
+  const act=S.rem.filter(r=>!r.done).sort((a,b)=>a.at-b.at),done=S.rem.filter(r=>r.done).slice(-5).reverse();
+  const perm='Notification' in window?Notification.permission:'tidak didukung',permTxt={granted:'diizinkan',denied:'ditolak',default:'belum diatur'}[perm]||perm;
+  $('#app').innerHTML=`<h2>Alarm</h2>
+  ${!native&&perm!=='granted'?`<div class="card"><b>Aktifkan notifikasi</b><div class="hint">Alarm berbunyi dan menampilkan layar peringatan saat aplikasi terbuka. Notifikasi sistem memerlukan izin (status: ${permTxt}).</div><div class="acts"><button class="btn sm" data-act="perm">Izinkan notifikasi</button></div></div>`:''}
+  ${native?`<div class="card"><b>Alarm saat aplikasi ditutup</b><div class="hint">Alarm tetap berbunyi walaupun aplikasi ditutup. Android 12 ke atas dapat meminta izin alarm.</div><div class="acts"><button class="btn sm" data-act="exact">Aktifkan izin alarm</button></div></div>`:''}
+  <div class="card"><h3>Tambah alarm</h3>
+  <label>Nama alarm</label><input id="r_t" placeholder="Contoh: Setor hasil panen">
+  <label>Waktu</label><input id="r_at" type="datetime-local" value="${toLocalInput(Date.now()+3600e3)}">
+  <button class="btn" data-act="addrem">Tambah alarm</button></div>
+  <h3 class="sec">Alarm aktif</h3>
+  <div class="list">${act.length?act.map(r=>{const late=r.at<=Date.now();return `<div class="card ${late?'due':''}"><div style="display:flex;justify-content:space-between;gap:8px"><b>${esc(r.title)}</b><span class="tag ${late?'warn':''}" ${late?'':`data-cd="${r.at}"`}>${late?'Lewat waktu':cd(r.at)}</span></div><div class="meta">${fmtD(r.at)} ${fmtT(r.at)}</div><div class="acts"><button class="btn sm" data-act="rdone" data-id="${r.id}">Selesai</button><button class="btn sm ghost" data-act="rsn" data-id="${r.id}">+10 mnt</button><button class="btn sm red" data-act="rdel" data-id="${r.id}">Hapus</button></div></div>`}).join(''):`<div class="empty">Tidak ada alarm aktif.</div>`}</div>
+  ${done.length?`<h3 class="sec">Alarm selesai</h3>`+done.map(r=>`<div class="card"><span class="meta">${fmtD(r.at)} ${fmtT(r.at)}</span> · ${esc(r.title)}</div>`).join(''):''}`;
+}
+function cd(t){const s=Math.max(0,Math.round((t-Date.now())/1000));const d=Math.floor(s/86400),h=Math.floor(s%86400/3600),m=Math.floor(s%3600/60);return d?`${d} hari ${h} jam`:h?`${h} jam ${m} mnt`:`${m} mnt ${s%60} dtk`}
+/* hanya ubah teks hitung mundur, tanpa menggambar ulang seluruh halaman */
+function updateCd(){
+  for(const el of document.querySelectorAll('[data-cd]')){
+    const at=+el.dataset.cd;
+    if(at<=Date.now()){if(!document.activeElement.matches('input,textarea,select'))drawRem();return}
+    const t=cd(at);if(el.textContent!==t)el.textContent=t;
+  }
+}
+
+/* ---------- pengaturan ---------- */
+function drawSet(){
+  const adm=A.role==='admin';
+  $('#app').innerHTML=`<h2>Pengaturan</h2>
+  <div class="panel"><div style="margin-top:12px;display:flex;gap:8px;align-items:center;flex-wrap:wrap"><b>${esc(A.name||A.user)}</b><span class="tag ${adm?'adm':''}">${adm?'Admin':'Anggota'}</span><span class="meta">@${esc(A.user)}</span></div>
+  <label>Nama karakter utama</label><input id="s_n" value="${esc(S.cfg.nama)}">
+  <label><input type="checkbox" id="s_s" ${S.cfg.sound?'checked':''} style="width:auto"> Bunyi alarm</label>
+  <div class="hint">Tujuan pengiriman dan format laporan dikelola oleh admin.</div>
+  <button class="btn" data-act="setsave">Simpan pengaturan</button></div>
+  ${adm?'':`<div class="panel"><h3 style="margin-top:12px">Ganti kata sandi</h3>
+  <label>Kata sandi lama</label><input id="c_o" type="password" autocomplete="current-password">
+  <label>Kata sandi baru (minimal 6 karakter)</label><input id="c_n" type="password" autocomplete="new-password">
+  <button class="btn ghost" data-act="chpw">Ganti kata sandi</button></div>`}
+  <div class="panel"><button class="btn red" data-act="logout">Keluar</button></div>`;
+}
+
+/* ---------- login & akun ---------- */
+const API_DEFAULT='https://bukutani-api.dandipesek5.workers.dev'; /* alamat Worker */
+const apiBase=()=>API_DEFAULT.replace(/\/+$/,'');
+async function api(path,o={}){
+  const hd={...(o.headers||{})};let body=o.body;
+  if(A&&A.token)hd.Authorization='Bearer '+A.token;
+  if(o.json!==undefined){hd['Content-Type']='application/json';body=JSON.stringify(o.json)}
+  const F=o.web?(window.CapacitorWebFetch||window.fetch.bind(window)):window.fetch.bind(window);
+  const ctl=new AbortController(),to=setTimeout(()=>ctl.abort(),o.timeout||30000);
+  const had=!!(A&&A.token);
+  try{
+    const r=await F(apiBase()+path,{method:o.method||(body?'POST':'GET'),headers:hd,body,signal:ctl.signal});
+    let j=null;try{j=await r.json()}catch(e){}
+    j=j||{};
+    if(had&&(r.status===401||(r.status===403&&j.code==='disabled')))doLogout(j.error||'Sesi berakhir, silakan masuk lagi');
+    return {ok:r.ok,status:r.status,data:j};
+  }catch(e){return {ok:false,status:0,data:{error:'Tidak dapat terhubung ke server. Periksa koneksi internet Anda.'}}}
+  finally{clearTimeout(to)}
+}
+let authMode='login';
+function authMsg(m,good){const e=$('#a_msg');if(e){e.textContent=m||'';e.classList.toggle('good',!!good)}}
+function showAuth(){authMode='login';$('#auth').classList.add('show');drawAuth()}
+function hideAuth(){$('#auth').classList.remove('show');$('#auth').innerHTML=''}
+let regInfo=null;
+async function loadRegInfo(){const r=await api('/api/info');regInfo=r.ok?r.data:{regOpen:true,needCode:false};if(authMode==='reg'&&$('#auth.show'))drawAuth()}
+function drawAuth(msg,good,keep){
+  const reg=authMode==='reg',u0=keep||'';
+  const closed=reg&&regInfo&&regInfo.regOpen===false;
+  $('#auth').innerHTML=`<div class="authbox"><div class="alogo">🌾</div><h1>Buku Tani RP</h1>
+  <div class="meta" style="margin:4px 0 16px">${reg?'Buat akun baru':'Masuk untuk melanjutkan'}</div>
+  <div class="panel">
+  ${closed?'<div class="empty" style="padding:20px 6px">Pendaftaran sedang ditutup oleh admin.</div>':`
+  <label>Nama pengguna</label><input id="a_u" value="${esc(u0)}" autocapitalize="none" autocorrect="off" spellcheck="false" autocomplete="username">
+  ${reg?'<label>Nama karakter</label><input id="a_n" placeholder="Nama karakter Anda">':''}
+  <label>Kata sandi</label><div style="position:relative"><input id="a_p" type="password" autocomplete="${reg?'new-password':'current-password'}" style="padding-right:48px"><button type="button" data-act="eye" aria-label="Lihat sandi" style="position:absolute;right:4px;top:4px;bottom:4px;width:40px;border:0;background:none;font-size:18px">👁</button></div>
+  ${reg&&regInfo&&regInfo.needCode?'<label>Kode undangan</label><input id="a_c" autocapitalize="none" autocomplete="off">':''}
+  <button class="btn" data-act="${reg?'doreg':'dologin'}">${reg?'Daftar':'Masuk'}</button>`}
+  <div id="a_msg" class="${good?'good':''}">${esc(msg||'')}</div></div>
+  <div class="meta" style="margin-top:16px">${reg?'Sudah punya akun?':'Belum punya akun?'} <button class="btn sm ghost" style="border:0;padding:4px 6px;text-decoration:underline" data-act="amode" data-m="${reg?'login':'reg'}">${reg?'Masuk':'Daftar'}</button></div></div>`;
+}
+document.addEventListener('keydown',e=>{if(e.key==='Enter'&&e.target.id==='a_appr_new'){const b=$('[data-act="appradd"]');if(b)b.click()}});
+document.addEventListener('keydown',e=>{if(e.key==='Enter'&&e.target.closest&&e.target.closest('#auth')&&e.target.tagName==='INPUT'){const b=$('#auth .panel .btn');if(b)b.click()}});
+function doLogout(msg){
+  if(ringing){$('#alarm').classList.remove('show');clearInterval(ring.h);ringing=null}
+  A=null;store.set('auth',null);navBuilt=false;lastDue=-1;admData=null;admRep=null;admView='laporan';admFilter='pending';admPending=0;
+  showAuth();if(msg)authMsg(msg);
+}
+async function wipeLocal(){S.rem.forEach(unschedule);S.logs=[];S.rem=[];save();await DB.clear()}
+function startSession(){hideAuth();S.tab='benih';navBuilt=false;lastDue=-1;lastHdr='';window.scrollTo(0,0);draw(true);refreshMe()}
+async function refreshMe(){
+  if(!A)return;
+  const r=await api('/api/me');
+  if(!r.ok||!A)return;
+  const roleChanged=A.role!==r.data.role,tplChanged=JSON.stringify(S.tpl)!==JSON.stringify(r.data.tpl);
+  A.role=r.data.role;A.name=r.data.name;store.set('auth',A);
+  if(tplChanged&&r.data.tpl){S.tpl=r.data.tpl;save()}
+  if(roleChanged){navBuilt=false;lastDue=-1;draw()}else if(tplChanged)prevNow();
+  if(A.role==='admin')countPending();
+}
+async function countPending(){const r=await api('/api/admin/reports?limit=1');if(r.ok&&A){admPending=r.data.pending||0;drawNav()}}
+setInterval(()=>{if(A&&A.role==='admin'&&!document.hidden&&S.tab!=='admin')countPending()},30000);
+function boot(){if(!A||!A.token){showAuth();return}draw(true);tick();refreshMe();setTimeout(memPoll,1500)}
+
+/* ---------- dashboard admin ---------- */
+let admData=null;
+/* ---- status laporan di sisi anggota ---- */
+let memBusy=false;
+async function memPoll(){
+  if(!A||memBusy||document.hidden)return;
+  const now=Date.now(),ls=S.logs.filter(l=>l.rid&&l.sent&&(l.st!=='success'||(l.type==='benih'&&now-l.at<3*864e5))).slice(0,30);
+  if(!ls.length)return;
+  memBusy=true;
+  try{
+    const r=await api('/api/reports/status',{json:{ids:ls.map(l=>l.rid)}});
+    if(!r.ok||!A)return;
+    let ch=false;
+    for(const l of ls){
+      const it=r.data.items[l.rid];if(!it)continue;
+      if(it.st!==l.st){l.st=it.st;ch=true;if(it.st==='success')toast(`${l.type==='benih'?'Pengambilan benih':'Setoran hasil panen'} "${l.item}" telah disetujui admin`)}
+      if((it.pk||'')!==(l.pk||'')){l.pk=it.pk||'';ch=true;if(l.pk)toast('Info pengambilan: '+l.pk)}
+    }
+    if(ch){save();drawNav();if(S.tab==='riwayat'){const y=window.scrollY;drawHist();window.scrollTo(0,y)}}
+  }finally{memBusy=false}
+}
+setInterval(memPoll,12000);
+document.addEventListener('visibilitychange',()=>{if(!document.hidden)memPoll()});
+
+function openAdmin(){
+  $('#app').innerHTML='<h2>Dasbor Admin</h2><div class="empty">Memuat…</div>';
+  loadAdmin();
+}
+let admView='laporan',admFilter='pending',admRep=null;
+async function loadAdmin(){
+  const tok=drawTok;
+  const [u,c,rp]=await Promise.all([api('/api/admin/users'),api('/api/admin/config'),api('/api/admin/reports?filter='+admFilter)]);
+  if(tok!==drawTok||S.tab!=='admin'||!A)return;
+  if(!u.ok||!c.ok){$('#app').innerHTML=`<h2>Dasbor Admin</h2><div class="empty">${esc(u.data.error||c.data.error||'Gagal memuat')}</div><button class="btn" data-act="admreload">Coba lagi</button>`;return}
+  admData={users:mergeUsers(u.data.users),cfg:c.data.cfg,adm:c.data.adminThreads||{benih:'',panen:''}};
+  admRep=rp.ok?rp.data:{reports:[],pending:0,dbSet:false,botSet:false};admPending=admRep.pending||0;
+  drawNav();drawAdmin();
+}
+/* ---- realtime: perubahan langsung tampil, penyegaran otomatis ---- */
+const admOv={};
+function mergeUsers(list){const now=Date.now();return list.filter(x=>{const o=admOv[x.username];if(o&&now-o.t<90000){if(o.del)return false;Object.assign(x,o.f)}return true})}
+function snapForm(){
+  if(!admData||!$('#h_url_benih'))return;const c=admData.cfg;
+  c.hooks={benih:{url:$('#h_url_benih').value,ping:$('#h_ping_benih').value},panen:{url:$('#h_url_panen').value,ping:$('#h_ping_panen').value}};
+  c.regOpen=$('#a_reg').checked;c.regCode=$('#a_code').value;c.tpl={benih:$('#a_tb').value,panen:$('#a_tp').value};
+}
+function redrawAdm(){if(S.tab!=='admin'||!admData)return;snapForm();const y=window.scrollY;drawAdmin();window.scrollTo(0,y)}
+function admApply(u,a){
+  const x=admData.users.find(y=>y.username===u);if(!x)return;
+  const ov=admOv[u]=admOv[u]||{f:{}};ov.t=Date.now();
+  if(a==='delete'){ov.del=true;admData.users=admData.users.filter(y=>y!==x)}
+  else{const st=a==='disable'?'disabled':(a==='approve'||a==='enable')?'active':null;if(st){x.status=st;ov.f.status=st}}
+  drawNav();
+}
+const typing=()=>{const a=document.activeElement;return !!(a&&a.closest&&a.closest('#app')&&/^(INPUT|TEXTAREA|SELECT)$/.test(a.tagName))};
+async function admPoll(){
+  if(!A||A.role!=='admin'||S.tab!=='admin'||!admData||document.hidden||typing())return;
+  if(admView==='laporan'){
+    const r=await api('/api/admin/reports?filter='+admFilter);
+    if(!r.ok||S.tab!=='admin'||admView!=='laporan'||typing())return;
+    const k=l=>JSON.stringify(l.map(x=>[x.id,x.st,x.pk,x.cerr]));
+    if(k(r.data.reports)!==k(admRep.reports)||r.data.pending!==admRep.pending||r.data.botSet!==admRep.botSet){admRep=r.data;admPending=r.data.pending||0;drawNav();redrawAdm()}
+  }else if(admView==='anggota'){
+    const r=await api('/api/admin/users?fast=1');
+    if(!r.ok||S.tab!=='admin'||admView!=='anggota')return;
+    const nu=mergeUsers(r.data.users),k=l=>JSON.stringify(l.map(x=>[x.username,x.status,x.name,x.tb,x.tp]));
+    if(k(nu)!==k(admData.users)&&!typing()){admData.users=nu;redrawAdm()}
+  }
+}
+setInterval(admPoll,8000);
+const THRN=(v)=>`inputmode="numeric" autocomplete="off" autocapitalize="none" spellcheck="false" placeholder="ID / tautan" value="${esc(v||'')}"`;
+function thrFields(tb,tp,who){return `<div class="thr"><div><label>Thread benih 🌱</label><input data-chg="uthr" data-k="benih" ${who} ${THRN(tb)}></div><div><label>Thread panen 🌾</label><input data-chg="uthr" data-k="panen" ${who} ${THRN(tp)}></div></div>`}
+function admHead(){
+  const pc=admRep?admRep.pending:0;
+  return `<h2>Dasbor Admin</h2><div class="seg" style="margin:10px 0 14px">${[['laporan','Laporan'+(pc?` (${pc})`:'')],['anggota','Anggota'],['atur','Pengaturan']].map(([k,n])=>`<button data-act="admview" data-v="${k}" class="${admView===k?'on':''}">${n}</button>`).join('')}</div>`;
+}
+function drawAdmin(){$('#app').innerHTML=admHead()+({laporan:admRepHtml,anggota:admUsersHtml,atur:admSetHtml})[admView]()}
+const notice=(t,d)=>`<div class="card" style="border-left-color:#c97a2b"><b>${t}</b><div class="hint">${d}</div></div>`;
+const repCard=r=>`<div class="card ${r.type}"><div style="display:flex;justify-content:space-between;gap:8px"><h3>${r.type==='benih'?'🌱 Pengambilan benih':'🌾 Setoran hasil panen'}</h3><span class="tag ${r.st==='success'?'ok':'wait'}">${r.st==='success'?'✅ Sukses':'⏳ Pending'}</span></div>
+  <div class="meta">${fmtD(r.at)} ${fmtT(r.at)} · ${esc(r.name)} (@${esc(r.u)})</div>
+  <div>${esc(r.item)} × ${esc(r.qty)}${r.lahan&&r.lahan!=='-'?` · ${esc(r.lahan)}`:''}</div>
+  ${r.type==='benih'?`<label>Informasi pengambilan untuk anggota</label><input data-chg="rpk" data-id="${r.id}" value="${esc(r.pk)}" placeholder="Contoh: Besok pukul 20.00 di gudang">`:''}
+  ${r.cerr?`<div class="hint" style="color:#8a3b17">⚠ ${esc(r.cerr)}</div>`:''}${r.st==='success'&&r.by?`<div class="hint">Disetujui oleh ${esc(r.by)}</div>`:''}
+  <div class="acts">${r.st!=='success'?`<button class="btn sm" data-act="rapp" data-id="${r.id}">Setujui</button>`:''}<button class="btn sm red" data-act="repdel" data-id="${r.id}">Hapus</button></div></div>`;
+function admRepHtml(){
+  const R=admRep;let o='';
+  if(!R.dbSet)o+=notice('Status laporan belum aktif','Hubungkan database D1 ke Worker dengan nama binding DB (langkahnya ada di panduan). Sebelum itu dilakukan, laporan tetap terkirim ke Discord tetapi tanpa status.');
+  else if(!R.botSet)o+=notice('Bot Discord belum tersambung','Persetujuan melalui reaksi di Discord belum aktif. Anda tetap dapat menyetujui laporan dengan tombol Setujui di bawah.');
+  o+=`<div class="seg" style="margin:0 0 12px">${[['pending','Menunggu'+(R.pending?` (${R.pending})`:'')],['all','Semua laporan']].map(([k,n])=>`<button data-act="rfilter" data-f="${k}" class="${admFilter===k?'on':''}">${n}</button>`).join('')}</div>`;
+  o+=R.reports.length?R.reports.map(repCard).join(''):`<div class="empty">${admFilter==='pending'?'Tidak ada laporan yang menunggu persetujuan.':'Belum ada laporan.'}</div>`;
+  o+=`<button class="btn ghost" data-act="admreload">Muat ulang</button>`;
+  return o;
+}
+function admUsersHtml(){
+  const us=admData.users,by=s=>us.filter(x=>x.status===s);
+  const B=(a,u,t,cls='')=>`<button class="btn sm ${cls}" data-act="uact" data-a="${a}" data-u="${esc(u)}">${t}</button>`;
+  const row=(x,btns,thr)=>`<div class="card"><div style="display:flex;justify-content:space-between;gap:8px"><b>${esc(x.name)}</b><span class="meta">@${esc(x.username)}</span></div><div class="meta">Daftar ${fmtD(x.created)}</div>${thr?thrFields(x.tb,x.tp,`data-u="${esc(x.username)}"`):''}<div class="acts">${btns}</div></div>`;
+  const pend=by('pending'),act=by('active'),off=by('disabled');
+  return `${pend.length?`<h3 class="sec" style="margin-top:6px">Menunggu persetujuan (${pend.length})</h3>`+pend.map(x=>row(x,B('approve',x.username,'Setujui')+B('delete',x.username,'Tolak','red'))).join(''):''}
+  <h3 class="sec" style="margin-top:${pend.length?22:6}px">Anggota (${act.length})</h3>
+  <div class="admn" style="margin-bottom:10px">Masukkan ID thread untuk setiap akun (boleh menempelkan tautan thread). Perubahan tersimpan otomatis. Kosongkan jika webhook mengarah ke channel biasa.</div>
+  <div class="card" style="border-left-color:#e5b53a"><b>Akun admin (Anda)</b><div class="meta">Digunakan saat Anda mengirim laporan sendiri.</div>${thrFields(admData.adm.benih,admData.adm.panen,'data-self="1"')}</div>
+  ${act.length?act.map(x=>row(x,B('disable',x.username,'Nonaktifkan','ghost')+B('resetpw',x.username,'Atur ulang sandi','ghost')+B('delete',x.username,'Hapus','red'),1)).join(''):'<div class="admn">Belum ada anggota. Akun baru akan langsung tampil di sini.</div>'}
+  ${off.length?`<h3 class="sec">Dinonaktifkan (${off.length})</h3>`+off.map(x=>row(x,B('enable',x.username,'Aktifkan')+B('delete',x.username,'Hapus','red'))).join(''):''}
+  <button class="btn ghost" data-act="admreload">Muat ulang</button>`;
+}
+function admSetHtml(){
+  const c=admData.cfg,H=c.hooks,R=admRep||{};
+  const hook=(k,ico,title)=>`<div class="card"><h3 style="margin:0">${ico} ${title}</h3>
+  <label>Discord webhook URL</label><input id="h_url_${k}" value="${esc(H[k].url)}" placeholder="https://discord.com/api/webhooks/..." autocapitalize="none" autocorrect="off" spellcheck="false">
+  <label>Mention (opsional)</label><input id="h_ping_${k}" value="${esc(H[k].ping)}" placeholder="Contoh: <@&ID_ROLE>">
+  <button class="btn ghost" data-act="admtest" data-t="${k}">Uji webhook</button></div>`;
+  return `<h3 class="sec" style="margin-top:6px">Webhook Discord</h3>
+  <div class="admn" style="margin-bottom:10px">URL webhook hanya dapat dilihat oleh admin. Dapat berupa webhook channel biasa atau channel forum.</div>
+  ${hook('benih','🌱','Pengambilan benih')}${hook('panen','🌾','Setoran hasil panen')}
+  <h3 class="sec">Persetujuan melalui reaksi</h3>
+  <div class="card"><div class="hint" style="margin:0 0 6px">Database: <b>${R.dbSet?'✅ Tersambung':'⚠ Belum tersambung'}</b> · Bot Discord: <b>${R.botSet?'✅ Tersambung':'⚠ Belum tersambung'}</b></div>
+  <label>Admin yang dapat menyetujui melalui reaksi</label>
+  <div class="chips">${(c.approvers||[]).map(a=>`<span class="chip"><span>${esc(a.name||'Admin')} <small>${esc(a.id)}</small></span><button data-act="apprdel" data-id="${esc(a.id)}" aria-label="Hapus ${esc(a.name||a.id)}">✕</button></span>`).join('')}</div>
+  ${(c.approvers||[]).length?'':'<div class="hint" style="color:#8a3b17">⚠ Belum ada admin pengecek. Selama daftar kosong, reaksi dari siapa pun dianggap sebagai persetujuan, termasuk reaksi anggota.</div>'}
+  <div class="addrow"><input id="a_appr_new" inputmode="numeric" placeholder="ID Discord admin" autocomplete="off"><button class="btn sm" data-act="appradd">Tambah</button></div>
+  <div class="hint">Aktifkan Developer Mode di Discord, klik kanan profil admin, lalu pilih Copy User ID. Perubahan tersimpan langsung.</div>
+  <button class="btn ghost" data-act="admbot">Uji bot</button></div>
+  <h3 class="sec">Pendaftaran</h3>
+  <div class="panel"><label style="margin-top:12px"><input type="checkbox" id="a_reg" ${c.regOpen!==false?'checked':''} style="width:auto"> Pendaftaran akun dibuka</label>
+  <label>Kode pendaftaran (opsional)</label><input id="a_code" value="${esc(c.regCode)}" placeholder="Kosongkan agar pendaftaran terbuka untuk umum" autocapitalize="none" autocomplete="off">
+  <div class="hint">Jika diisi, bagikan kode hanya kepada orang yang Anda undang.</div></div>
+  <div class="card"><h3>Format laporan</h3>
+  <div class="hint">Penanda: {nama} {item} {jumlah} {lahan} {tanggal} {jam} {catatan}</div>
+  <label>Format pengambilan benih</label><textarea id="a_tb" style="min-height:140px">${esc(c.tpl.benih)}</textarea>
+  <label>Format setoran hasil panen</label><textarea id="a_tp" style="min-height:140px">${esc(c.tpl.panen)}</textarea>
+  <button class="btn ghost" data-act="admtplreset">Kembalikan ke format awal</button></div>
+  <div class="panel"><button class="btn" data-act="admsave">Simpan pengaturan</button></div>`;
+}
+document.addEventListener('change',e=>{const t=e.target.closest&&e.target.closest('[data-chg]');if(t&&CHG[t.dataset.chg])CHG[t.dataset.chg](t)});
+const CHG={
+  async rpk(t){
+    const r=await api('/api/admin/report',{json:{id:t.dataset.id,pk:t.value}});
+    toast(r.ok?'Informasi pengambilan disimpan':(r.data.error||'Gagal menyimpan'));
+    if(r.ok){const x=admRep.reports.find(y=>y.id===t.dataset.id);if(x)x.pk=t.value.trim()}
+  },
+  async uthr(t){
+    const card=t.closest('.card'),ins=[...card.querySelectorAll('[data-chg="uthr"]')],self=!!t.dataset.self;
+    const rec=self?admData.adm:admData.users.find(x=>x.username===t.dataset.u);
+    const get=k=>self?rec[k]:(k==='benih'?rec.tb:rec.tp);
+    const body=self?{self:true,action:'setthreads'}:{username:t.dataset.u,action:'setthreads'};
+    body[t.dataset.k]=t.value;
+    const r=await api('/api/admin/user',{json:body});
+    if(!r.ok){toast(r.data.error||'Gagal menyimpan');t.value=get(t.dataset.k)||'';return}
+    const th=r.data.threads;
+    if(self){rec.benih=th.benih;rec.panen=th.panen}else{rec.tb=th.benih;rec.tp=th.panen;const ov=admOv[t.dataset.u]=admOv[t.dataset.u]||{f:{}};ov.t=Date.now();ov.f.tb=th.benih;ov.f.tp=th.panen}
+    ins.forEach(i=>{i.value=th[i.dataset.k]||''});
+    toast('ID thread disimpan');
+  }
+};
+async function loginCore(){
+    const u=$('#a_u').value.trim().toLowerCase(),p=$('#a_p').value;
+    if(!u||!p){authMsg('Nama pengguna dan kata sandi wajib diisi');return}
+    authMsg('');
+    const r=await api('/api/login',{json:{username:u,password:p}});
+    if(!r.ok){authMsg(r.data.error||'Gagal masuk');return}
+    const last=store.get('lastUser','');
+    if(last&&last!==r.data.user&&(S.logs.length||S.rem.length)){
+      if(!confirm(`Perangkat ini masih menyimpan riwayat laporan milik akun "${last}". Jika masuk sebagai "${r.data.user}", riwayat tersebut akan dihapus dari perangkat. Lanjutkan?`))return;
+      await wipeLocal();
+    }
+    A={token:r.data.token,role:r.data.role,user:r.data.user,name:r.data.name};store.set('auth',A);store.set('lastUser',A.user);
+    if(!S.cfg.nama||last!==A.user)S.cfg.nama=A.name||S.cfg.nama;save();
+    startSession();
+}
+const ACT={
+  amode(b){authMode=b.dataset.m;drawAuth();if(authMode==='reg'&&!regInfo)loadRegInfo()},
+  eye(){const e=$('#a_p');e.type=e.type==='password'?'text':'password'},
+  dologin(b){return busy(b,loginCore)},
+  doreg(b){return busy(b,async()=>{
+    const u=$('#a_u').value.trim().toLowerCase(),n=$('#a_n').value.trim(),p=$('#a_p').value,c=$('#a_c')?$('#a_c').value.trim():'';
+    if(!u||!p){authMsg('Nama pengguna dan kata sandi wajib diisi');return}
+    if(p.length<6){authMsg('Kata sandi minimal 6 karakter');return}
+    authMsg('');
+    const r=await api('/api/register',{json:{username:u,password:p,name:n,code:c}});
+    if(!r.ok){authMsg(r.data.error||'Gagal mendaftar');return}
+    await loginCore();
+  })},
+  logout(){if(confirm('Keluar dari akun? Riwayat laporan di perangkat ini tetap tersimpan.'))doLogout()},
+  chpw(b){return busy(b,async()=>{
+    const o=$('#c_o').value,n=$('#c_n').value;
+    if(!o||!n){toast('Kata sandi lama dan baru wajib diisi');return}
+    const r=await api('/api/passwd',{json:{old:o,new:n}});
+    if(!r.ok){toast(r.data.error||'Gagal mengganti kata sandi');return}
+    A.token=r.data.token;store.set('auth',A);$('#c_o').value=$('#c_n').value='';toast('Kata sandi berhasil diganti');
+  })},
+  admreload(){draw()},
+  uact(b){
+    const u=b.dataset.u,a=b.dataset.a,body={username:u,action:a};
+    if(a==='delete'&&!confirm(`Hapus akun @${u}? Tindakan ini tidak dapat dibatalkan.`))return;
+    if(a==='resetpw'){const p=prompt(`Kata sandi baru untuk @${u} (minimal 6 karakter):`);if(!p)return;body.password=p}
+    return busy(b,async()=>{
+      const r=await api('/api/admin/user',{json:body});
+      if(!r.ok){toast(r.data.error||'Terjadi kesalahan');return}
+      admApply(u,a);redrawAdm();
+      toast({approve:'Akun disetujui',disable:'Akun dinonaktifkan',enable:'Akun diaktifkan',delete:'Akun dihapus',resetpw:'Kata sandi telah diatur ulang'}[a]||'Berhasil');
+    });
+  },
+  admsave(b){return busy(b,async()=>{
+    const hooks={};for(const k of ['benih','panen'])hooks[k]={url:$('#h_url_'+k).value.trim(),ping:$('#h_ping_'+k).value.trim()};
+    const body={hooks,regOpen:$('#a_reg').checked,regCode:$('#a_code').value.trim(),tpl:{benih:$('#a_tb').value,panen:$('#a_tp').value}};
+    const r=await api('/api/admin/config',{json:body});
+    if(!r.ok){toast(r.data.error||'Gagal menyimpan');return}
+    S.tpl=body.tpl;save();admData.cfg={...admData.cfg,...body};toast('Pengaturan disimpan');
+  })},
+  admtest(b){return busy(b,async()=>{
+    const k=b.dataset.t,r=await api('/api/admin/test',{json:{type:k,url:$('#h_url_'+k).value.trim()}});
+    toast(r.ok?(r.data.forum?'Webhook forum berfungsi. Satu post uji telah dibuat.':'Webhook berfungsi. Periksa pesan uji di Discord.'):(r.data.error||'Pengujian gagal'));
+  })},
+  appradd(b){return busy(b,async()=>{
+    const i=$('#a_appr_new'),v=i.value.trim();
+    if(!v){toast('ID Discord admin wajib diisi');return}
+    const r=await api('/api/admin/approver',{json:{action:'add',id:v}});
+    if(!r.ok){toast(r.data.error||'Gagal menambahkan');return}
+    admData.cfg.approvers=r.data.approvers;const a=r.data.approvers[r.data.approvers.length-1];
+    redrawAdm();toast(`${a.name||a.id} ditambahkan sebagai admin pengecek`);
+  })},
+  apprdel(b){return busy(b,async()=>{
+    const r=await api('/api/admin/approver',{json:{action:'del',id:b.dataset.id}});
+    if(!r.ok){toast(r.data.error||'Gagal menghapus');return}
+    admData.cfg.approvers=r.data.approvers;redrawAdm();toast('Admin dihapus dari daftar pengecek');
+  })},
+  admview(b){snapForm();admView=b.dataset.v;redrawAdm();if(admView==='laporan')admPoll()},
+  async rfilter(b){admFilter=b.dataset.f;const r=await api('/api/admin/reports?filter='+admFilter);if(r.ok){admRep=r.data;admPending=r.data.pending||0;drawNav();redrawAdm()}},
+  rapp(b){return busy(b,async()=>{
+    const r=await api('/api/admin/report',{json:{id:b.dataset.id,action:'approve'}});
+    if(!r.ok){toast(r.data.error||'Gagal');return}
+    const x=admRep.reports.find(y=>y.id===b.dataset.id);if(x){x.st='success';x.by='admin';x.cerr=''}
+    if(admFilter==='pending')admRep.reports=admRep.reports.filter(y=>y.id!==b.dataset.id);
+    admRep.pending=Math.max(0,admRep.pending-1);admPending=admRep.pending;drawNav();redrawAdm();toast('Laporan disetujui');
+  })},
+  repdel(b){
+    if(!confirm('Hapus laporan ini dari dasbor? Pesan di Discord tidak ikut terhapus.'))return;
+    return busy(b,async()=>{
+      const r=await api('/api/admin/report',{json:{id:b.dataset.id,action:'delete'}});
+      if(!r.ok){toast(r.data.error||'Gagal');return}
+      const x=admRep.reports.find(y=>y.id===b.dataset.id);if(x&&x.st==='pending')admRep.pending=Math.max(0,admRep.pending-1);
+      admRep.reports=admRep.reports.filter(y=>y.id!==b.dataset.id);admPending=admRep.pending;drawNav();redrawAdm();toast('Laporan dihapus');
+    });
+  },
+  admbot(b){return busy(b,async()=>{const r=await api('/api/admin/testbot',{json:{}});toast(r.ok?`Bot tersambung: ${r.data.name}`:(r.data.error||'Pengujian gagal'))})},
+  admtplreset(){$('#a_tb').value=DEF_TPL.benih;$('#a_tp').value=DEF_TPL.panen},
+  tab(b){if(S.tab===b.dataset.t)return;S.tab=b.dataset.t;window.scrollTo(0,0);draw(true)},
+  cam(){$('#p_cam').click()},
+  gal(){$('#p_gal').click()},
+  rmp(b){const d=draft[S.tab],p=d.photos.splice(+b.dataset.i,1)[0];if(p)URL.revokeObjectURL(p.url);renderStrip(S.tab)},
+  savesend(b){return busy(b,async()=>{const d=await commit(S.tab);if(!d)return;await sendDiscord(d);S.tab='riwayat';S.hist='semua';S.histN=20;draw(true)})},
+  hist(b){S.hist=b.dataset.h;S.histN=20;drawTok++;revokeTh();drawNav();drawHist();app.classList.add('anim');clearTimeout(draw.h);draw.h=setTimeout(()=>app.classList.remove('anim'),750)},
+  more(){S.histN+=20;const y=window.scrollY;drawTok++;revokeTh();drawHist();window.scrollTo(0,y)},
+  send(b){return busy(b,async()=>{const l=findLog(b);if(!l)return;await sendDiscord(l);const y=window.scrollY;draw();window.scrollTo(0,y)})},
+  async copy(b){const l=findLog(b);if(l){await copyText(msgOf(l));toast('Teks laporan disalin')}},
+  del(b){const l=findLog(b);if(!l||!confirm('Hapus laporan ini?'))return;
+    leave(b,()=>{S.logs=S.logs.filter(x=>x.id!==l.id);S.rem.filter(r=>r.logId===l.id).forEach(unschedule);S.rem=S.rem.filter(r=>r.logId!==l.id);DB.del(l.id);save();const y=window.scrollY;draw();window.scrollTo(0,y)})},
+  view(b){openViewer(b.dataset.id,+b.dataset.i)},
+  vclose(){closeViewer()},
+  async exact(){try{await LN.requestPermissions();await LN.changeExactNotificationSetting()}catch(e){toast('Izin alarm sudah aktif')}},
+  async perm(){try{await Notification.requestPermission()}catch(e){}drawRem()},
+  addrem(){const t=$('#r_t').value.trim();if(!t){toast('Nama alarm wajib diisi');return}const nr={id:uid(),title:t,body:'',at:new Date($('#r_at').value).getTime(),done:false};S.rem.push(nr);schedule(nr);save();draw()},
+  rdone(b){const r=findRem(b);if(!r)return;r.done=true;unschedule(r);save();leave(b,draw)},
+  rsn(b){const r=findRem(b);if(!r)return;r.at=Date.now()+600e3;r.fired=false;schedule(r);save();draw()},
+  rdel(b){const r=findRem(b);if(!r)return;unschedule(r);S.rem=S.rem.filter(x=>x.id!==r.id);save();leave(b,draw)},
+  setsave(){S.cfg={...S.cfg,nama:$('#s_n').value.trim(),sound:$('#s_s').checked};save();toast('Pengaturan disimpan')},
+};
+document.addEventListener('click',e=>{const b=e.target.closest('[data-act]');if(b&&ACT[b.dataset.act])ACT[b.dataset.act](b,e)});
+document.addEventListener('input',e=>{
+  const t=e.target;
+  if(t.id&&t.id.startsWith('f_')&&(S.tab==='benih'||S.tab==='panen')){if(t.id!=='f_at')draft[S.tab].v[t.id]=t.value;prevSoon()}
+});
+document.addEventListener('change',e=>{if(e.target.classList&&e.target.classList.contains('pin'))addPhotos(e.target)});
+
+/* ---------- Android native (Capacitor) ---------- */
+const CAP=window.Capacitor||{};
+const LN=CAP.Plugins&&CAP.Plugins.LocalNotifications;
+const native=!!(LN&&CAP.isNativePlatform&&CAP.isNativePlatform());
+async function nativeInit(){
+  if(!native)return;
+  try{
+    await LN.createChannel({id:'farmer',name:'Alarm Buku Tani',description:'Alarm panen dan pengambilan benih',importance:5,visibility:1,vibration:true,lights:true});
+    const p=await LN.checkPermissions();
+    if(p.display!=='granted')await LN.requestPermissions();
+    for(const r of S.rem)if(!r.done&&r.at>Date.now())await schedule(r);
+  }catch(e){}
+  try{
+    const A=CAP.Plugins.App;
+    if(A)A.addListener('backButton',()=>{
+      if(ringing){return}
+      if($('#viewer').classList.contains('show')){closeViewer();return}
+      if(S.tab!=='benih'){S.tab='benih';draw(true)}else A.exitApp();
+    });
+  }catch(e){}
+}
+async function schedule(r){
+  if(!native||r.done)return;
+  r.nid=r.nid||(Math.floor(Math.random()*2e9)+1);save();
+  try{
+    await LN.cancel({notifications:[{id:r.nid}]});
+    if(r.at>Date.now())await LN.schedule({notifications:[{id:r.nid,title:r.title,body:r.body||'Sudah waktunya.',schedule:{at:new Date(r.at),allowWhileIdle:true},channelId:'farmer',autoCancel:true}]});
+  }catch(e){}
+}
+async function unschedule(r){
+  if(!native||!r.nid)return;
+  try{await LN.cancel({notifications:[{id:r.nid}]})}catch(e){}
+}
+
+/* ---------- mesin pengingat ---------- */
+let ringing=null,ac=null,lastClock='';
+function beep(){
+  if(native||!S.cfg.sound)return;
+  try{ac=ac||new (window.AudioContext||window.webkitAudioContext)();
+    [0,.25,.5].forEach(t=>{const o=ac.createOscillator(),g=ac.createGain();o.frequency.value=880;o.connect(g);g.connect(ac.destination);g.gain.setValueAtTime(.2,ac.currentTime+t);g.gain.exponentialRampToValueAtTime(.001,ac.currentTime+t+.2);o.start(ac.currentTime+t);o.stop(ac.currentTime+t+.22)});
+  }catch(e){}
+}
+function ring(r){
+  r.fired=true;save();
+  $('#alT').textContent=r.title;$('#alB').textContent=r.body||`Dijadwalkan pukul ${fmtT(r.at)}`;
+  $('#alarm').classList.add('show');ringing=r;
+  beep();clearInterval(ring.h);ring.h=setInterval(beep,4000);
+  if(!native&&navigator.vibrate)navigator.vibrate([300,150,300,150,300]);
+  try{if(!native&&'Notification' in window&&Notification.permission==='granted')new Notification(r.title,{body:r.body||''})}catch(e){}
+}
+function stopRing(){$('#alarm').classList.remove('show');clearInterval(ring.h);ringing=null;draw()}
+$('#alOk').onclick=()=>{if(ringing){ringing.done=true;unschedule(ringing)}save();stopRing()};
+$('#alSn').onclick=()=>{if(ringing){ringing.at=Date.now()+300e3;ringing.fired=false;schedule(ringing)}save();stopRing()};
+function tick(){
+  const c=`${fmtD(Date.now())} · ${fmtT(Date.now())}`;
+  if(c!==lastClock){lastClock=c;$('#clock').textContent=c}
+  if(!ringing&&A){
+    const r=S.rem.find(x=>x.id&&!x.done&&!x.fired&&x.at<=Date.now());
+    if(r){ring(r);drawNav();return}
+  }
+  if(S.tab==='ingat'&&!ringing)updateCd();
+}
+document.addEventListener('visibilitychange',()=>{if(!document.hidden)tick()});
+setInterval(()=>{if(!document.hidden)tick()},1000);
+
+/* ---------- efek halus (ringan, pasif) ---------- */
+document.addEventListener('pointerdown',e=>{const b=e.target.closest('.btn');if(!b)return;const r=b.getBoundingClientRect();b.style.setProperty('--rx',(e.clientX-r.left)+'px');b.style.setProperty('--ry',(e.clientY-r.top)+'px')},{passive:true});
+(()=>{const h=document.querySelector('header');let q=0;addEventListener('scroll',()=>{if(q)return;q=requestAnimationFrame(()=>{q=0;h.classList.toggle('sc',scrollY>4)})},{passive:true})})();
+nativeInit();boot();
+if(!native&&'serviceWorker' in navigator&&/^https?:/.test(location.protocol))navigator.serviceWorker.register('/sw.js').catch(()=>{});
+</script>
+</body>
+</html>
